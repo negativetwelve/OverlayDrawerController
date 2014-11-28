@@ -13,6 +13,7 @@
 		4D3853851A290E5D00490222 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D3853831A290E5D00490222 /* LaunchScreen.xib */; };
 		4D3853911A290E5E00490222 /* ExampleOverlayDrawerControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D3853901A290E5E00490222 /* ExampleOverlayDrawerControllerTests.swift */; };
 		4D38539C1A290F4A00490222 /* OverlayDrawerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D38539B1A290F4A00490222 /* OverlayDrawerController.swift */; };
+		4D38539E1A2916FA00490222 /* LeftViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D38539D1A2916FA00490222 /* LeftViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +37,7 @@
 		4D38538F1A290E5E00490222 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4D3853901A290E5E00490222 /* ExampleOverlayDrawerControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleOverlayDrawerControllerTests.swift; sourceTree = "<group>"; };
 		4D38539B1A290F4A00490222 /* OverlayDrawerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OverlayDrawerController.swift; path = ../OverlayDrawerController/OverlayDrawerController.swift; sourceTree = "<group>"; };
+		4D38539D1A2916FA00490222 /* LeftViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeftViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,6 +82,7 @@
 			children = (
 				4D38537A1A290E5D00490222 /* AppDelegate.swift */,
 				4D38537C1A290E5D00490222 /* ViewController.swift */,
+				4D38539D1A2916FA00490222 /* LeftViewController.swift */,
 				4D3853811A290E5D00490222 /* Images.xcassets */,
 				4D3853831A290E5D00490222 /* LaunchScreen.xib */,
 				4D3853781A290E5D00490222 /* Supporting Files */,
@@ -220,6 +223,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4D38539C1A290F4A00490222 /* OverlayDrawerController.swift in Sources */,
+				4D38539E1A2916FA00490222 /* LeftViewController.swift in Sources */,
 				4D38537D1A290E5D00490222 /* ViewController.swift in Sources */,
 				4D38537B1A290E5D00490222 /* AppDelegate.swift in Sources */,
 			);
