@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		4D38537B1A290E5D00490222 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D38537A1A290E5D00490222 /* AppDelegate.swift */; };
 		4D38537D1A290E5D00490222 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D38537C1A290E5D00490222 /* ViewController.swift */; };
-		4D3853801A290E5D00490222 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4D38537E1A290E5D00490222 /* Main.storyboard */; };
 		4D3853821A290E5D00490222 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4D3853811A290E5D00490222 /* Images.xcassets */; };
 		4D3853851A290E5D00490222 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D3853831A290E5D00490222 /* LaunchScreen.xib */; };
 		4D3853911A290E5E00490222 /* ExampleOverlayDrawerControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D3853901A290E5E00490222 /* ExampleOverlayDrawerControllerTests.swift */; };
@@ -31,7 +30,6 @@
 		4D3853791A290E5D00490222 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4D38537A1A290E5D00490222 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4D38537C1A290E5D00490222 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		4D38537F1A290E5D00490222 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		4D3853811A290E5D00490222 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		4D3853841A290E5D00490222 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		4D38538A1A290E5E00490222 /* ExampleOverlayDrawerControllerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ExampleOverlayDrawerControllerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -82,7 +80,6 @@
 			children = (
 				4D38537A1A290E5D00490222 /* AppDelegate.swift */,
 				4D38537C1A290E5D00490222 /* ViewController.swift */,
-				4D38537E1A290E5D00490222 /* Main.storyboard */,
 				4D3853811A290E5D00490222 /* Images.xcassets */,
 				4D3853831A290E5D00490222 /* LaunchScreen.xib */,
 				4D3853781A290E5D00490222 /* Supporting Files */,
@@ -203,7 +200,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4D3853801A290E5D00490222 /* Main.storyboard in Resources */,
 				4D3853851A290E5D00490222 /* LaunchScreen.xib in Resources */,
 				4D3853821A290E5D00490222 /* Images.xcassets in Resources */,
 			);
@@ -248,14 +244,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		4D38537E1A290E5D00490222 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				4D38537F1A290E5D00490222 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		4D3853831A290E5D00490222 /* LaunchScreen.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -353,6 +341,7 @@
 				INFOPLIST_FILE = ExampleOverlayDrawerController/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -363,6 +352,7 @@
 				INFOPLIST_FILE = ExampleOverlayDrawerController/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
