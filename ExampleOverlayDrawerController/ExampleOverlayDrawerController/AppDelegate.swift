@@ -12,6 +12,7 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
   var window: UIWindow?
+  var overlayDrawerController: OverlayDrawerController!
   
   class func instance() -> AppDelegate {
     return UIApplication.sharedApplication().delegate as AppDelegate
@@ -20,10 +21,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
     self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
     
-    var viewController = ViewController()
-    var navigationController = UINavigationController(rootViewController: viewController)
+    let centerViewController = ViewController()
+    let centerNavigationController = UINavigationController(rootViewController: centerViewController)
     
-    self.window?.rootViewController = navigationController
+    let leftViewController = ViewController()
+    let leftNavigationController = UINavigationController(rootViewController: leftViewController)
+    
+    self.overlayDrawerController = OverlayDrawerController(centerViewController: centerNavigationController, leftDrawerViewController: leftNavigationController)
+    
+    self.window?.rootViewController = self.overlayDrawerController
     self.window!.makeKeyAndVisible()
     
     return true

@@ -7,3 +7,7 @@
 //
 
 import UIKit
+
+public class OverlayDrawerController: UIViewController, UIGestureRecognizerDelegate {
+
+}
