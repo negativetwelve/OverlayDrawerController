@@ -57,6 +57,7 @@ public enum DrawerOpenCenterInteractionMode: Int {
 
 private let DrawerMinimumAnimationDuration: CGFloat = 0.15
 private let DrawerDefaultDampingFactor: CGFloat = 1.0
+public typealias DrawerControllerDrawerVisualStateBlock = (OverlayDrawerController, DrawerSide, CGFloat) -> Void
 
 
 private class DrawerCenterContainerView: UIView {
@@ -129,7 +130,9 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
     }
   }
   
+  public var shouldStretchDrawer = true
   public var drawerDampingFactor = DrawerDefaultDampingFactor
+  public var drawerVisualStateBlock: DrawerControllerDrawerVisualStateBlock?
   
   private lazy var childControllerContainerView: UIView = {
     let childContainerViewFrame = self.view.bounds
@@ -280,6 +283,24 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
       drawerVisualState(self, drawerSide, percentVisible)
     } else if self.shouldStretchDrawer {
       self.applyOvershootScaleTransformForDrawerSide(drawerSide, percentVisible: percentVisible)
+    }
+  }
+  
+  private func applyOvershootScaleTransformForDrawerSide(drawerSide: DrawerSide, percentVisible: CGFloat) {
+    if percentVisible >= 1.0 {
+      var transform = CATransform3DIdentity
+      
+      if let sideDrawerViewController = self.sideDrawerViewControllerForSide(drawerSide) {
+        if drawerSide == .Left {
+          transform = CATransform3DMakeScale(percentVisible, 1.0, 1.0)
+          transform = CATransform3DTranslate(transform, 250 * (percentVisible - 1.0) / 2, 0, 0)
+        } else if drawerSide == .Right {
+          transform = CATransform3DMakeScale(percentVisible, 1.0, 1.0)
+          transform = CATransform3DTranslate(transform, -250 * (percentVisible - 1.0) / 2, 0, 0)
+        }
+        
+        sideDrawerViewController.view.layer.transform = transform
+      }
     }
   }
 

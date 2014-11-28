@@ -13,6 +13,7 @@ class LeftViewController: UIViewController {
   override init() {
     super.init()
     title = "LeftViewController"
+    view.backgroundColor = .blackColor()
   }
   
   override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {

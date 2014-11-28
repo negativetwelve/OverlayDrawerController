@@ -13,6 +13,7 @@ class ViewController: UIViewController {
   override init() {
     super.init()
     title = "ViewController"
+    view.backgroundColor = .whiteColor()
   }
   
   override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
