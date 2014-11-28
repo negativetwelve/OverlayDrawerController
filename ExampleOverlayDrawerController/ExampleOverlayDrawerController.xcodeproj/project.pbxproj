@@ -13,6 +13,7 @@
 		4D3853821A290E5D00490222 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4D3853811A290E5D00490222 /* Images.xcassets */; };
 		4D3853851A290E5D00490222 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D3853831A290E5D00490222 /* LaunchScreen.xib */; };
 		4D3853911A290E5E00490222 /* ExampleOverlayDrawerControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D3853901A290E5E00490222 /* ExampleOverlayDrawerControllerTests.swift */; };
+		4D38539C1A290F4A00490222 /* OverlayDrawerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D38539B1A290F4A00490222 /* OverlayDrawerController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +37,7 @@
 		4D38538A1A290E5E00490222 /* ExampleOverlayDrawerControllerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ExampleOverlayDrawerControllerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D38538F1A290E5E00490222 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4D3853901A290E5E00490222 /* ExampleOverlayDrawerControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleOverlayDrawerControllerTests.swift; sourceTree = "<group>"; };
+		4D38539B1A290F4A00490222 /* OverlayDrawerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OverlayDrawerController.swift; path = ../OverlayDrawerController/OverlayDrawerController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +61,7 @@
 		4D38536C1A290E5D00490222 = {
 			isa = PBXGroup;
 			children = (
+				4D38539A1A290F0100490222 /* OverlayDrawerController */,
 				4D3853771A290E5D00490222 /* ExampleOverlayDrawerController */,
 				4D38538D1A290E5E00490222 /* ExampleOverlayDrawerControllerTests */,
 				4D3853761A290E5D00490222 /* Products */,
@@ -110,6 +113,14 @@
 				4D38538F1A290E5E00490222 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		4D38539A1A290F0100490222 /* OverlayDrawerController */ = {
+			isa = PBXGroup;
+			children = (
+				4D38539B1A290F4A00490222 /* OverlayDrawerController.swift */,
+			);
+			name = OverlayDrawerController;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -212,6 +223,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4D38539C1A290F4A00490222 /* OverlayDrawerController.swift in Sources */,
 				4D38537D1A290E5D00490222 /* ViewController.swift in Sources */,
 				4D38537B1A290E5D00490222 /* AppDelegate.swift in Sources */,
 			);
