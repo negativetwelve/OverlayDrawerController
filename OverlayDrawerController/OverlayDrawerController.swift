@@ -49,39 +49,14 @@ public enum DrawerSide: Int {
   case Right
 }
 
-public enum DrawerOpenCenterInteractionMode: Int {
-  case None
-  case Full
-  case NavigationBarOnly
-}
-
 private let DrawerMinimumAnimationDuration: CGFloat = 0.15
 private let DrawerDefaultAnimationVelocity: CGFloat = 840.0
 private let DrawerDefaultDampingFactor: CGFloat = 1.0
-public typealias DrawerControllerDrawerVisualStateBlock = (OverlayDrawerController, DrawerSide, CGFloat) -> Void
 
 
 private class DrawerCenterContainerView: UIView {
   private var openSide: DrawerSide = .None
-  var centerInteractionMode: DrawerOpenCenterInteractionMode = .None
-  
-  private override func hitTest(point: CGPoint, withEvent event: UIEvent?) -> UIView? {
-    var hitView = super.hitTest(point, withEvent: event)
-    
-    if hitView != nil && self.openSide != .None {
-      let navBar = self.navigationBarContainedWithinSubviewsOfView(self)
-      
-      if navBar != nil {
-        let navBarFrame = navBar!.convertRect(navBar!.bounds, toView: self)
-        if (self.centerInteractionMode == .NavigationBarOnly && CGRectContainsPoint(navBarFrame, point) == false) || (self.centerInteractionMode == .None) {
-          hitView = nil;
-        }
-      }
-    }
-    
-    return hitView
-  }
-  
+
   private func navigationBarContainedWithinSubviewsOfView(view: UIView) -> UINavigationBar? {
     var navBar: UINavigationBar?
     
@@ -134,13 +109,14 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
   public var animationVelocity = DrawerDefaultAnimationVelocity
   public var shouldStretchDrawer = true
   public var drawerDampingFactor = DrawerDefaultDampingFactor
-  public var drawerVisualStateBlock: DrawerControllerDrawerVisualStateBlock?
   
   private lazy var childControllerContainerView: UIView = {
     let childContainerViewFrame = self.view.bounds
     let childControllerContainerView = UIView(frame: childContainerViewFrame)
     childControllerContainerView.backgroundColor = .clearColor()
     childControllerContainerView.autoresizingMask = .FlexibleHeight | .FlexibleWidth
+    childControllerContainerView.addSubview(self.shadowView)
+    
     self.view.addSubview(childControllerContainerView)
     
     return childControllerContainerView
@@ -153,31 +129,23 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
     centerContainerView.autoresizingMask = .FlexibleWidth | .FlexibleHeight
     centerContainerView.backgroundColor = .clearColor()
     centerContainerView.openSide = self.openSide
-    centerContainerView.centerInteractionMode = self.centerHiddenInteractionMode
     self.childControllerContainerView.addSubview(centerContainerView)
     
     return centerContainerView
-    }()
+  }()
+  
+  private lazy var shadowView: UIView = {
+    let shadowView = UIView(frame: self.view.bounds)
+    shadowView.backgroundColor = UIColor.blackColor().colorWithAlphaComponent(0)
+    
+    let tapGesture = UITapGestureRecognizer(target: self, action: "tapOnShadow:")
+    shadowView.addGestureRecognizer(tapGesture)
+
+    return shadowView;
+  }()
   
   public private(set) var openSide: DrawerSide = .None
-  
-  public var centerHiddenInteractionMode: DrawerOpenCenterInteractionMode = .NavigationBarOnly {
-    didSet {
-      self.centerContainerView.centerInteractionMode = self.centerHiddenInteractionMode
-    }
-  }
-  
-  //
-  // MARK: - Drawer Attributes
-  //
-  private var isOpen: Bool?
-//  private var drawerView: UIView
-//  private var menuHeight: CGFloat
-//  private var menuWidth: CGFloat
-//  private var outFrame: CGRect
-//  private var inFrame: CGRect
-  
-  
+
   //
   // MARK: - Initializers
   //
@@ -194,23 +162,6 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
     
     self.centerViewController = centerViewController
     self.leftDrawerViewController = leftDrawerViewController
-  }
-  
-  //
-  // MARK: - View Lifecycle
-  //
-  override public func viewDidLoad() {
-    super.viewDidLoad()
-    setUpDrawer()
-  }
-  
-  //
-  // MARK: - Drawer Setup
-  //
-  public func setUpDrawer() {
-    println("setting up drawer")
-    
-    self.isOpen = false;
   }
   
   //
@@ -388,6 +339,11 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
     }
     
     if let sideDrawerViewControllerToPresent = self.sideDrawerViewControllerForSide(drawer) {
+
+      self.childControllerContainerView.bringSubviewToFront(self.shadowView)
+      self.childControllerContainerView.bringSubviewToFront(sideDrawerViewControllerToPresent.view)
+      println("asdfasdf")
+
       sideDrawerViewControllerToPresent.view.hidden = false
       self.resetDrawerVisualStateForDrawerSide(drawer)
       sideDrawerViewControllerToPresent.view.frame = sideDrawerViewControllerToPresent.evo_visibleDrawerFrame
@@ -460,11 +416,6 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
           newFrame = self.centerContainerView.frame
           newFrame.origin.x = 0 - 250
         }
-        
-//        self.view.bringSubviewToFront(self.childControllerContainerView)
-        println(self.view.subviews)
-        println(self.centerContainerView.subviews)
-        println(self.childControllerContainerView)
         
         let distance = abs(CGRectGetMinX(oldFrame) - newFrame.origin.x)
         let duration: NSTimeInterval = animated ? NSTimeInterval(max(distance / abs(velocity), DrawerMinimumAnimationDuration)) : 0.0
@@ -539,6 +490,14 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
           completion?(finished)
       })
     }
+  }
+  
+  //
+  // MARK: - UIActions
+  //
+  public func tapOnShadow(sender: UITapGestureRecognizer!) {
+    println("tap on shadow")
+    closeDrawerAnimated(true, completion: nil)
   }
   
 }
