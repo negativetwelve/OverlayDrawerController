@@ -15,6 +15,10 @@ class ViewController: UIViewController {
     title = "ViewController"
     view.backgroundColor = .whiteColor()
     navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Show", style: .Plain, target: self, action: "showNavigationDrawer:")
+    
+    var subview = UIView(frame: CGRect(x: 80, y: 10, width: 100, height: 100))
+    subview.backgroundColor = .redColor()
+    self.view.addSubview(subview)
   }
   
   override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {

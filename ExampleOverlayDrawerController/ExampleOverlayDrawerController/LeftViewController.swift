@@ -14,6 +14,10 @@ class LeftViewController: UIViewController {
     super.init()
     title = "LeftViewController"
     view.backgroundColor = .blueColor()
+    
+    var subview = UIView(frame: CGRect(x: 80, y: 10, width: 100, height: 100))
+    subview.backgroundColor = .orangeColor()
+    self.view.addSubview(subview)
   }
   
   override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {

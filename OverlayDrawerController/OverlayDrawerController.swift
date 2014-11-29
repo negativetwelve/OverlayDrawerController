@@ -139,7 +139,7 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
   private lazy var childControllerContainerView: UIView = {
     let childContainerViewFrame = self.view.bounds
     let childControllerContainerView = UIView(frame: childContainerViewFrame)
-    childControllerContainerView.backgroundColor = UIColor.clearColor()
+    childControllerContainerView.backgroundColor = .clearColor()
     childControllerContainerView.autoresizingMask = .FlexibleHeight | .FlexibleWidth
     self.view.addSubview(childControllerContainerView)
     
@@ -151,7 +151,7 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
     
     let centerContainerView = DrawerCenterContainerView(frame: centerFrame)
     centerContainerView.autoresizingMask = .FlexibleWidth | .FlexibleHeight
-    centerContainerView.backgroundColor = UIColor.clearColor()
+    centerContainerView.backgroundColor = .clearColor()
     centerContainerView.openSide = self.openSide
     centerContainerView.centerInteractionMode = self.centerHiddenInteractionMode
     self.childControllerContainerView.addSubview(centerContainerView)
