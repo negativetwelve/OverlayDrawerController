@@ -24,36 +24,19 @@ extension UIViewController {
   }
   
   var evo_visibleDrawerFrame: CGRect {
-    if let drawerController = self.evo_drawerController {
-      if self == drawerController.leftDrawerViewController || self.navigationController == drawerController.leftDrawerViewController {
-        var rect = drawerController.view.bounds
-        rect.size.width = 250
-        return rect
-      }
-      
-//      if self == drawerController.rightDrawerViewController || self.navigationController == drawerController.rightDrawerViewController {
-//        var rect = drawerController.view.bounds
-//        rect.size.width = drawerController.maximumRightDrawerWidth
-//        rect.origin.x = CGRectGetWidth(drawerController.view.bounds) - rect.size.width
-//        return rect
-//      }
-    }
-    
-    return CGRectNull
+    let bounds = self.view.bounds
+    return CGRectMake(0, 0, 250, bounds.height)
   }
   
   var evo_offscreenLeftDrawerFrame: CGRect {
-    if let drawerController = self.evo_drawerController {
-      let bounds = drawerController.view.bounds
-      return CGRectMake(-250, 0, bounds.height, 250)
-    }
-    return CGRectNull
+    let bounds = self.view.bounds
+    return CGRectMake(-250, 0, 250, bounds.height)
   }
   
   var evo_offscreenRightDrawerFrame: CGRect {
     if let drawerController = self.evo_drawerController {
       let bounds = drawerController.view.bounds
-      return CGRectMake(bounds.width + 250, 0, bounds.height, 250)
+      return CGRectMake(bounds.width + 250, 0, 250, bounds.height)
     }
     return CGRectNull
   }
@@ -130,7 +113,6 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
     let childContainerViewFrame = self.view.bounds
     let childControllerContainerView = UIView(frame: childContainerViewFrame)
     childControllerContainerView.backgroundColor = .clearColor()
-    childControllerContainerView.autoresizingMask = .FlexibleHeight | .FlexibleWidth
     childControllerContainerView.addSubview(self.shadowView)
     
     self.view.addSubview(childControllerContainerView)
@@ -139,13 +121,12 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
     }()
   
   private lazy var centerContainerView: DrawerCenterContainerView = {
-    let centerFrame = self.childControllerContainerView.bounds
+    let centerFrame = self.view.bounds
     
     let centerContainerView = DrawerCenterContainerView(frame: centerFrame)
-    centerContainerView.autoresizingMask = .FlexibleWidth | .FlexibleHeight
     centerContainerView.backgroundColor = .clearColor()
     centerContainerView.openSide = self.openSide
-    self.childControllerContainerView.addSubview(centerContainerView)
+    self.view.addSubview(centerContainerView)
     
     return centerContainerView
   }()
@@ -202,14 +183,10 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
       currentSideViewController!.removeFromParentViewController()
     }
     
-    var autoResizingMask = UIViewAutoresizing()
-    
     if drawerSide == .Left {
       self._leftDrawerViewController = viewController
-      autoResizingMask = .FlexibleRightMargin | .FlexibleHeight
     } else if drawerSide == .Right {
 //      self._rightDrawerViewController = viewController
-      autoResizingMask = .FlexibleLeftMargin | .FlexibleHeight
     }
     
     if viewController != nil {
@@ -223,12 +200,14 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
       } else {
         self.childControllerContainerView.addSubview(viewController!.view)
 //        self.childControllerContainerView.sendSubviewToBack(viewController!.view)
-        viewController!.view.hidden = true
+//        viewController!.view.hidden = true
       }
       
       viewController!.didMoveToParentViewController(self)
-      viewController!.view.autoresizingMask = autoResizingMask
-      viewController!.view.frame = viewController!.evo_visibleDrawerFrame
+//      viewController!.view.frame = viewController!.evo_offscreenLeftDrawerFrame
+      println(self.childControllerContainerView.frame)
+      self.childControllerContainerView.frame = self.evo_offscreenLeftDrawerFrame
+      println(self.childControllerContainerView.frame)
     }
   }
   
@@ -259,7 +238,7 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
     
     if self._centerViewController != nil {
       self.addChildViewController(self._centerViewController!)
-      self._centerViewController!.view.frame = self.childControllerContainerView.bounds
+      self._centerViewController!.view.frame = self.view.bounds
       self.centerContainerView.addSubview(self._centerViewController!.view)
 //      self.childControllerContainerView.bringSubviewToFront(self.centerContainerView)
       self._centerViewController!.view.autoresizingMask = .FlexibleWidth | .FlexibleHeight
@@ -280,14 +259,6 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
   //
   // MARK: - Helpers
   //
-  private func resetDrawerVisualStateForDrawerSide(drawerSide: DrawerSide) {
-    if let sideDrawerViewController = self.sideDrawerViewControllerForSide(drawerSide) {
-      sideDrawerViewController.view.layer.anchorPoint = CGPoint(x: 0.5, y: 0.5)
-      sideDrawerViewController.view.layer.transform = CATransform3DIdentity
-      sideDrawerViewController.view.alpha = 1.0
-    }
-  }
-
   private func childViewControllerForSide(drawerSide: DrawerSide) -> UIViewController? {
     var childViewController: UIViewController?
     
@@ -323,21 +294,13 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
       drawerToHide = .Left
     }
     
-    if let sideDrawerViewControllerToHide = self.sideDrawerViewControllerForSide(drawerToHide) {
-      self.childControllerContainerView.sendSubviewToBack(sideDrawerViewControllerToHide.view)
-      sideDrawerViewControllerToHide.view.hidden = true
-    }
+//    if let sideDrawerViewControllerToHide = self.sideDrawerViewControllerForSide(drawerToHide) {
+//      self.childControllerContainerView.sendSubviewToBack(sideDrawerViewControllerToHide.view)
+//      sideDrawerViewControllerToHide.view.hidden = true
+//    }
     
     if let sideDrawerViewControllerToPresent = self.sideDrawerViewControllerForSide(drawer) {
 
-      self.childControllerContainerView.bringSubviewToFront(self.shadowView)
-      self.childControllerContainerView.bringSubviewToFront(sideDrawerViewControllerToPresent.view)
-      println("asdfasdf")
-
-      sideDrawerViewControllerToPresent.view.hidden = false
-      self.resetDrawerVisualStateForDrawerSide(drawer)
-      sideDrawerViewControllerToPresent.view.frame = sideDrawerViewControllerToPresent.evo_visibleDrawerFrame
-      sideDrawerViewControllerToPresent.beginAppearanceTransition(true, animated: animated)
     }
   }
 
@@ -391,7 +354,7 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
       let sideDrawerViewController = self.sideDrawerViewControllerForSide(drawerSide)
       
       if self.openSide != drawerSide {
-        self.prepareToPresentDrawer(drawerSide, animated: animated)
+//        self.prepareToPresentDrawer(drawerSide, animated: animated)
       }
       
       if sideDrawerViewController != nil {
@@ -409,9 +372,14 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
         let distance = abs(CGRectGetMinX(oldFrame) - newFrame.origin.x)
         let duration: NSTimeInterval = animated ? NSTimeInterval(max(distance / abs(velocity), DrawerMinimumAnimationDuration)) : 0.0
         
+        sideDrawerViewController!.beginAppearanceTransition(false, animated: true)
         UIView.animateWithDuration(duration, delay: 0.0, usingSpringWithDamping: self.drawerDampingFactor, initialSpringVelocity: velocity / distance, options: options, animations: { () -> Void in
           self.setNeedsStatusBarAppearanceUpdate()
-          self.centerContainerView.frame = newFrame
+          
+          println(self.childControllerContainerView.frame)
+          self.childControllerContainerView.frame = self.evo_visibleDrawerFrame
+          println(self.childControllerContainerView.frame)
+          
           }, completion: { (finished) -> Void in
             if drawerSide != self.openSide {
               sideDrawerViewController!.endAppearanceTransition()
@@ -419,7 +387,6 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
             
             self.openSide = drawerSide
             
-            self.resetDrawerVisualStateForDrawerSide(drawerSide)
             self.animatingDrawer = false
             
             completion?(finished)
@@ -467,11 +434,9 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
       
       UIView.animateWithDuration(duration, delay: 0.0, usingSpringWithDamping: self.drawerDampingFactor, initialSpringVelocity: velocity / distance, options: options, animations: { () -> Void in
         self.setNeedsStatusBarAppearanceUpdate()
-        self.centerContainerView.frame = newFrame
         }, completion: { (finished) -> Void in
           sideDrawerViewController?.endAppearanceTransition()
           self.openSide = .None
-          self.resetDrawerVisualStateForDrawerSide(visibleSide)
           self.animatingDrawer = false
           completion?(finished)
       })
