@@ -41,6 +41,22 @@ extension UIViewController {
     
     return CGRectNull
   }
+  
+  var evo_offscreenLeftDrawerFrame: CGRect {
+    if let drawerController = self.evo_drawerController {
+      let bounds = drawerController.view.bounds
+      return CGRectMake(-250, 0, bounds.height, 250)
+    }
+    return CGRectNull
+  }
+  
+  var evo_offscreenRightDrawerFrame: CGRect {
+    if let drawerController = self.evo_drawerController {
+      let bounds = drawerController.view.bounds
+      return CGRectMake(bounds.width + 250, 0, bounds.height, 250)
+    }
+    return CGRectNull
+  }
 }
 
 public enum DrawerSide: Int {
@@ -245,7 +261,7 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
       self.addChildViewController(self._centerViewController!)
       self._centerViewController!.view.frame = self.childControllerContainerView.bounds
       self.centerContainerView.addSubview(self._centerViewController!.view)
-      self.childControllerContainerView.bringSubviewToFront(self.centerContainerView)
+//      self.childControllerContainerView.bringSubviewToFront(self.centerContainerView)
       self._centerViewController!.view.autoresizingMask = .FlexibleWidth | .FlexibleHeight
 //      self.updateShadowForCenterView()
       
@@ -269,32 +285,6 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
       sideDrawerViewController.view.layer.anchorPoint = CGPoint(x: 0.5, y: 0.5)
       sideDrawerViewController.view.layer.transform = CATransform3DIdentity
       sideDrawerViewController.view.alpha = 1.0
-    }
-  }
-  
-  private func updateDrawerVisualStateForDrawerSide(drawerSide: DrawerSide, percentVisible: CGFloat) {
-    if let drawerVisualState = self.drawerVisualStateBlock {
-      drawerVisualState(self, drawerSide, percentVisible)
-    } else if self.shouldStretchDrawer {
-      self.applyOvershootScaleTransformForDrawerSide(drawerSide, percentVisible: percentVisible)
-    }
-  }
-  
-  private func applyOvershootScaleTransformForDrawerSide(drawerSide: DrawerSide, percentVisible: CGFloat) {
-    if percentVisible >= 1.0 {
-      var transform = CATransform3DIdentity
-      
-      if let sideDrawerViewController = self.sideDrawerViewControllerForSide(drawerSide) {
-        if drawerSide == .Left {
-          transform = CATransform3DMakeScale(percentVisible, 1.0, 1.0)
-          transform = CATransform3DTranslate(transform, 250 * (percentVisible - 1.0) / 2, 0, 0)
-        } else if drawerSide == .Right {
-          transform = CATransform3DMakeScale(percentVisible, 1.0, 1.0)
-          transform = CATransform3DTranslate(transform, -250 * (percentVisible - 1.0) / 2, 0, 0)
-        }
-        
-        sideDrawerViewController.view.layer.transform = transform
-      }
     }
   }
 
@@ -347,7 +337,6 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
       sideDrawerViewControllerToPresent.view.hidden = false
       self.resetDrawerVisualStateForDrawerSide(drawer)
       sideDrawerViewControllerToPresent.view.frame = sideDrawerViewControllerToPresent.evo_visibleDrawerFrame
-      self.updateDrawerVisualStateForDrawerSide(drawer, percentVisible: 0.0)
       sideDrawerViewControllerToPresent.beginAppearanceTransition(true, animated: animated)
     }
   }
@@ -423,7 +412,6 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
         UIView.animateWithDuration(duration, delay: 0.0, usingSpringWithDamping: self.drawerDampingFactor, initialSpringVelocity: velocity / distance, options: options, animations: { () -> Void in
           self.setNeedsStatusBarAppearanceUpdate()
           self.centerContainerView.frame = newFrame
-          self.updateDrawerVisualStateForDrawerSide(drawerSide, percentVisible: 1.0)
           }, completion: { (finished) -> Void in
             if drawerSide != self.openSide {
               sideDrawerViewController!.endAppearanceTransition()
@@ -475,13 +463,11 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
       
       let sideDrawerViewController = self.sideDrawerViewControllerForSide(visibleSide)
       
-      self.updateDrawerVisualStateForDrawerSide(visibleSide, percentVisible: percentVisible)
       sideDrawerViewController?.beginAppearanceTransition(false, animated: animated)
       
       UIView.animateWithDuration(duration, delay: 0.0, usingSpringWithDamping: self.drawerDampingFactor, initialSpringVelocity: velocity / distance, options: options, animations: { () -> Void in
         self.setNeedsStatusBarAppearanceUpdate()
         self.centerContainerView.frame = newFrame
-        self.updateDrawerVisualStateForDrawerSide(visibleSide, percentVisible: 0.0)
         }, completion: { (finished) -> Void in
           sideDrawerViewController?.endAppearanceTransition()
           self.openSide = .None
