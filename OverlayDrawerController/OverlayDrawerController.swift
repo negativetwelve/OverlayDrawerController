@@ -48,6 +48,7 @@ public enum DrawerSide: Int {
   case Right
 }
 
+private let DrawerVelocity: CGFloat = 350;
 private let DrawerMinimumAnimationDuration: CGFloat = 0.15
 private let DrawerDefaultAnimationVelocity: CGFloat = 840.0
 private let DrawerDefaultDampingFactor: CGFloat = 1.0
@@ -126,7 +127,7 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
     let centerContainerView = DrawerCenterContainerView(frame: centerFrame)
     centerContainerView.backgroundColor = .clearColor()
     centerContainerView.openSide = self.openSide
-    self.view.addSubview(centerContainerView)
+    self.view.insertSubview(centerContainerView, belowSubview: self.childControllerContainerView)
     
     return centerContainerView
   }()
@@ -134,7 +135,7 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
   private lazy var shadowView: UIView = {
     let shadowView = UIView(frame: self.view.bounds)
     shadowView.backgroundColor = UIColor.blackColor().colorWithAlphaComponent(0)
-    
+
     let tapGesture = UITapGestureRecognizer(target: self, action: "tapOnShadow:")
     shadowView.addGestureRecognizer(tapGesture)
 
@@ -159,6 +160,11 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
     
     self.centerViewController = centerViewController
     self.leftDrawerViewController = leftDrawerViewController
+    
+    let panGesture = UIPanGestureRecognizer(target: self, action: "moveDrawer:")
+    panGesture.maximumNumberOfTouches = 1
+    panGesture.minimumNumberOfTouches = 1
+    self.view.addGestureRecognizer(panGesture)
   }
   
   //
@@ -203,6 +209,9 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
 //        viewController!.view.hidden = true
       }
       
+      let gestureRecognizer = UIGestureRecognizer(target: self, action: "drawerViewTapped:")
+      viewController!.view.addGestureRecognizer(gestureRecognizer)
+      
       viewController!.didMoveToParentViewController(self)
 //      viewController!.view.frame = viewController!.evo_offscreenLeftDrawerFrame
       println(self.childControllerContainerView.frame)
@@ -241,7 +250,7 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
       self._centerViewController!.view.frame = self.view.bounds
       self.centerContainerView.addSubview(self._centerViewController!.view)
 //      self.childControllerContainerView.bringSubviewToFront(self.centerContainerView)
-      self._centerViewController!.view.autoresizingMask = .FlexibleWidth | .FlexibleHeight
+//      self._centerViewController!.view.autoresizingMask = .FlexibleWidth | .FlexibleHeight
 //      self.updateShadowForCenterView()
       
       if animated == false {
@@ -358,23 +367,12 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
       }
       
       if sideDrawerViewController != nil {
-        var newFrame: CGRect
-        let oldFrame = self.centerContainerView.frame
-        
-        if drawerSide == .Left {
-          newFrame = self.centerContainerView.frame
-          //newFrame.origin.x = 250
-        } else {
-          newFrame = self.centerContainerView.frame
-          newFrame.origin.x = 0 - 250
-        }
-        
-        let distance = abs(CGRectGetMinX(oldFrame) - newFrame.origin.x)
-        let duration: NSTimeInterval = animated ? NSTimeInterval(max(distance / abs(velocity), DrawerMinimumAnimationDuration)) : 0.0
-        
         sideDrawerViewController!.beginAppearanceTransition(false, animated: true)
-        UIView.animateWithDuration(duration, delay: 0.0, usingSpringWithDamping: self.drawerDampingFactor, initialSpringVelocity: velocity / distance, options: options, animations: { () -> Void in
+        UIView.animateWithDuration(1.0, delay: 0.0, usingSpringWithDamping: self.drawerDampingFactor, initialSpringVelocity: 0, options: options, animations: { () -> Void in
           self.setNeedsStatusBarAppearanceUpdate()
+          
+          self.shadowView.hidden = false
+          self.shadowView.backgroundColor = UIColor.blackColor().colorWithAlphaComponent(0.3)
           
           println(self.childControllerContainerView.frame)
           self.childControllerContainerView.frame = self.evo_visibleDrawerFrame
@@ -407,11 +405,6 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
       completion?(false)
     } else {
       self.animatingDrawer = animated
-      let newFrame = self.childControllerContainerView.bounds
-      
-      let distance = abs(CGRectGetMinX(self.centerContainerView.frame))
-      let duration: NSTimeInterval = animated ? NSTimeInterval(max(distance / abs(velocity), DrawerMinimumAnimationDuration)) : 0.0
-      
       let leftDrawerVisible = CGRectGetMinX(self.centerContainerView.frame) > 0
       let rightDrawerVisible = CGRectGetMinX(self.centerContainerView.frame) < 0
       
@@ -432,8 +425,12 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
       
       sideDrawerViewController?.beginAppearanceTransition(false, animated: animated)
       
-      UIView.animateWithDuration(duration, delay: 0.0, usingSpringWithDamping: self.drawerDampingFactor, initialSpringVelocity: velocity / distance, options: options, animations: { () -> Void in
+      UIView.animateWithDuration(1.0, delay: 0.0, usingSpringWithDamping: self.drawerDampingFactor, initialSpringVelocity: 0, options: options, animations: { () -> Void in
         self.setNeedsStatusBarAppearanceUpdate()
+        
+        self.childControllerContainerView.frame = self.evo_offscreenLeftDrawerFrame
+        self.shadowView.hidden = true
+        
         }, completion: { (finished) -> Void in
           sideDrawerViewController?.endAppearanceTransition()
           self.openSide = .None
@@ -451,4 +448,40 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
     closeDrawerAnimated(true, completion: nil)
   }
   
+  public func drawerViewTapped(sender: UITapGestureRecognizer!) {
+    println("drawer view tapped")
+  }
+  
+  public func moveDrawer(recognizer: UIPanGestureRecognizer!) {
+    let translation = recognizer.translationInView(self.view)
+    let velocity = recognizer.velocityInView(self.view)
+
+    if recognizer.state == .Began {
+      if velocity.x > DrawerVelocity {
+        self.openDrawerSide(.Left, animated: true, completion: nil)
+      } else if velocity.x < -DrawerVelocity {
+        self.closeDrawerAnimated(true, completion: nil)
+      }
+    }
+    
+    if recognizer.state == .Changed {
+      let movingX = self.childControllerContainerView.center.x + translation.x
+      if movingX > -self.childControllerContainerView.bounds.width / 2 && movingX < self.childControllerContainerView.bounds.width / 2 {
+        self.childControllerContainerView.center = CGPointMake(movingX, self.childControllerContainerView.center.y)
+        recognizer.setTranslation(CGPointMake(0, 0), inView: self.view)
+        
+        let changingAlpha = 0.3 / self.childControllerContainerView.bounds.width * movingX + 0.3 / 2
+        self.shadowView.hidden = false
+        self.shadowView.backgroundColor = UIColor.blackColor().colorWithAlphaComponent(changingAlpha)
+      }
+    }
+    
+    if recognizer.state == .Ended {
+      if self.childControllerContainerView.center.x > 0 {
+        self.openDrawerSide(.Left, animated: true, completion: nil)
+      } else if self.childControllerContainerView.center.x < 0 {
+        self.closeDrawerAnimated(true, completion: nil)
+      }
+    }
+  }
 }
