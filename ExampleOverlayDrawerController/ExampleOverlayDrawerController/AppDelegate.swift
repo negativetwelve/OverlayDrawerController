@@ -25,9 +25,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let centerNavigationController = UINavigationController(rootViewController: centerViewController)
     
     let leftViewController = LeftViewController()
-    let leftNavigationController = UINavigationController(rootViewController: leftViewController)
-    
-    self.overlayDrawerController = OverlayDrawerController(centerViewController: centerNavigationController, leftDrawerViewController: leftNavigationController)
+
+    self.overlayDrawerController = OverlayDrawerController(centerViewController: centerNavigationController, leftDrawerViewController: leftViewController)
     
     self.window?.rootViewController = self.overlayDrawerController
     self.window!.makeKeyAndVisible()

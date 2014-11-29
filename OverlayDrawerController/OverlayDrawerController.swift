@@ -217,10 +217,51 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
   // MARK: - Setters
   //
   private func setDrawerViewController(viewController: UIViewController?, forSide drawerSide: DrawerSide) {
+    assert({ () -> Bool in
+      return drawerSide != .None
+      }(), "drawerSide cannot be .None")
+    
+    let currentSideViewController = self.sideDrawerViewControllerForSide(drawerSide)
+    
+    if currentSideViewController == viewController {
+      return
+    }
+    
+    if currentSideViewController != nil {
+      currentSideViewController!.beginAppearanceTransition(false, animated: false)
+      currentSideViewController!.view.removeFromSuperview()
+      currentSideViewController!.endAppearanceTransition()
+      currentSideViewController!.willMoveToParentViewController(nil)
+      currentSideViewController!.removeFromParentViewController()
+    }
+    
+    var autoResizingMask = UIViewAutoresizing()
+    
     if drawerSide == .Left {
       self._leftDrawerViewController = viewController
+      autoResizingMask = .FlexibleRightMargin | .FlexibleHeight
     } else if drawerSide == .Right {
-      // RightDrawerViewController
+//      self._rightDrawerViewController = viewController
+      autoResizingMask = .FlexibleLeftMargin | .FlexibleHeight
+    }
+    
+    if viewController != nil {
+      self.addChildViewController(viewController!)
+      
+      if (self.openSide == drawerSide) && (self.childControllerContainerView.subviews as NSArray).containsObject(self.centerContainerView) {
+        self.childControllerContainerView.addSubview(viewController!.view)
+//        self.childControllerContainerView.insertSubview(viewController!.view, belowSubview: self.centerContainerView)
+        viewController!.beginAppearanceTransition(true, animated: false)
+        viewController!.endAppearanceTransition()
+      } else {
+        self.childControllerContainerView.addSubview(viewController!.view)
+//        self.childControllerContainerView.sendSubviewToBack(viewController!.view)
+        viewController!.view.hidden = true
+      }
+      
+      viewController!.didMoveToParentViewController(self)
+      viewController!.view.autoresizingMask = autoResizingMask
+      viewController!.view.frame = viewController!.evo_visibleDrawerFrame
     }
   }
   
@@ -414,11 +455,16 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
         
         if drawerSide == .Left {
           newFrame = self.centerContainerView.frame
-          newFrame.origin.x = 250
+          //newFrame.origin.x = 250
         } else {
           newFrame = self.centerContainerView.frame
           newFrame.origin.x = 0 - 250
         }
+        
+//        self.view.bringSubviewToFront(self.childControllerContainerView)
+        println(self.view.subviews)
+        println(self.centerContainerView.subviews)
+        println(self.childControllerContainerView)
         
         let distance = abs(CGRectGetMinX(oldFrame) - newFrame.origin.x)
         let duration: NSTimeInterval = animated ? NSTimeInterval(max(distance / abs(velocity), DrawerMinimumAnimationDuration)) : 0.0
