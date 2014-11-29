@@ -114,7 +114,6 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
     let childContainerViewFrame = self.view.bounds
     let childControllerContainerView = UIView(frame: childContainerViewFrame)
     childControllerContainerView.backgroundColor = .clearColor()
-    childControllerContainerView.addSubview(self.shadowView)
     
     self.view.addSubview(childControllerContainerView)
     
@@ -127,6 +126,7 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
     let centerContainerView = DrawerCenterContainerView(frame: centerFrame)
     centerContainerView.backgroundColor = .clearColor()
     centerContainerView.openSide = self.openSide
+    centerContainerView.addSubview(self.shadowView)
     self.view.insertSubview(centerContainerView, belowSubview: self.childControllerContainerView)
     
     return centerContainerView
@@ -248,7 +248,7 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
     if self._centerViewController != nil {
       self.addChildViewController(self._centerViewController!)
       self._centerViewController!.view.frame = self.view.bounds
-      self.centerContainerView.addSubview(self._centerViewController!.view)
+      self.centerContainerView.insertSubview(self._centerViewController!.view, belowSubview: self.shadowView)
 //      self.childControllerContainerView.bringSubviewToFront(self.centerContainerView)
 //      self._centerViewController!.view.autoresizingMask = .FlexibleWidth | .FlexibleHeight
 //      self.updateShadowForCenterView()
@@ -368,7 +368,7 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
       
       if sideDrawerViewController != nil {
         sideDrawerViewController!.beginAppearanceTransition(false, animated: true)
-        UIView.animateWithDuration(1.0, delay: 0.0, usingSpringWithDamping: self.drawerDampingFactor, initialSpringVelocity: 0, options: options, animations: { () -> Void in
+        UIView.animateWithDuration(0.3, delay: 0.0, usingSpringWithDamping: self.drawerDampingFactor, initialSpringVelocity: 0, options: options, animations: { () -> Void in
           self.setNeedsStatusBarAppearanceUpdate()
           
           self.shadowView.hidden = false
@@ -425,7 +425,7 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
       
       sideDrawerViewController?.beginAppearanceTransition(false, animated: animated)
       
-      UIView.animateWithDuration(1.0, delay: 0.0, usingSpringWithDamping: self.drawerDampingFactor, initialSpringVelocity: 0, options: options, animations: { () -> Void in
+      UIView.animateWithDuration(0.3, delay: 0.0, usingSpringWithDamping: self.drawerDampingFactor, initialSpringVelocity: 0, options: options, animations: { () -> Void in
         self.setNeedsStatusBarAppearanceUpdate()
         
         self.childControllerContainerView.frame = self.evo_offscreenLeftDrawerFrame
