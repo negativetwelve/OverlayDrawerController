@@ -14,6 +14,7 @@ class ViewController: UIViewController {
     super.init()
     title = "ViewController"
     view.backgroundColor = .whiteColor()
+    navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Show", style: .Plain, target: self, action: "showNavigationDrawer:")
   }
   
   override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
@@ -35,6 +36,10 @@ class ViewController: UIViewController {
     // Dispose of any resources that can be recreated.
   }
 
+  func showNavigationDrawer(sender: UIButton) {
+    println("pressed")
+    self.evo_drawerController?.toggleDrawerSide(.Left, animated: true, completion: nil)
+  }
 
 }
 

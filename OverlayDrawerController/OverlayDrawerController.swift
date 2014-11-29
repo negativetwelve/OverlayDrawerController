@@ -56,6 +56,7 @@ public enum DrawerOpenCenterInteractionMode: Int {
 }
 
 private let DrawerMinimumAnimationDuration: CGFloat = 0.15
+private let DrawerDefaultAnimationVelocity: CGFloat = 840.0
 private let DrawerDefaultDampingFactor: CGFloat = 1.0
 public typealias DrawerControllerDrawerVisualStateBlock = (OverlayDrawerController, DrawerSide, CGFloat) -> Void
 
@@ -130,6 +131,7 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
     }
   }
   
+  public var animationVelocity = DrawerDefaultAnimationVelocity
   public var shouldStretchDrawer = true
   public var drawerDampingFactor = DrawerDefaultDampingFactor
   public var drawerVisualStateBlock: DrawerControllerDrawerVisualStateBlock?
@@ -352,10 +354,45 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
       sideDrawerViewControllerToPresent.beginAppearanceTransition(true, animated: animated)
     }
   }
+
+  //
+  // MARK: - Toggle Drawer
+  //
+  public func toggleLeftDrawerSideAnimated(animated: Bool, completion: ((Bool) -> Void)?) {
+    self.toggleDrawerSide(.Left, animated: animated, completion: completion)
+  }
   
+  public func toggleRightDrawerSideAnimated(animated: Bool, completion: ((Bool) -> Void)?) {
+    self.toggleDrawerSide(.Right, animated: animated, completion: completion)
+  }
+  
+  public func toggleDrawerSide(drawerSide: DrawerSide, animated: Bool, completion: ((Bool) -> Void)?) {
+    assert({ () -> Bool in
+      return drawerSide != .None
+      }(), "drawerSide cannot be .None")
+    
+    if self.openSide == DrawerSide.None {
+      self.openDrawerSide(drawerSide, animated: animated, completion: completion)
+    } else {
+      if (drawerSide == DrawerSide.Left && self.openSide == DrawerSide.Left) || (drawerSide == DrawerSide.Right && self.openSide == DrawerSide.Right) {
+        self.closeDrawerAnimated(animated, completion: completion)
+      } else if completion != nil {
+        completion!(false)
+      }
+    }
+  }
+
   //
   // MARK: - Open Drawer
   //
+  public func openDrawerSide(drawerSide: DrawerSide, animated: Bool, completion: ((Bool) -> Void)?) {
+    assert({ () -> Bool in
+      return drawerSide != .None
+      }(), "drawerSide cannot be .None")
+    
+    self.openDrawerSide(drawerSide, animated: animated, velocity: self.animationVelocity, animationOptions: nil, completion: completion)
+  }
+
   private func openDrawerSide(drawerSide: DrawerSide, animated: Bool, velocity: CGFloat, animationOptions options: UIViewAnimationOptions, completion: ((Bool) -> Void)?) {
     assert({ () -> Bool in
       return drawerSide != .None
@@ -403,6 +440,58 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
             completion?(finished)
         })
       }
+    }
+  }
+  
+  //
+  // MARK: - Close Drawer
+  //
+  public func closeDrawerAnimated(animated: Bool, completion: ((Bool) -> Void)?) {
+    self.closeDrawerAnimated(animated, velocity: self.animationVelocity, animationOptions: nil, completion: completion)
+  }
+  
+  private func closeDrawerAnimated(animated: Bool, velocity: CGFloat, animationOptions options: UIViewAnimationOptions, completion: ((Bool) -> Void)?) {
+    if self.animatingDrawer {
+      completion?(false)
+    } else {
+      self.animatingDrawer = animated
+      let newFrame = self.childControllerContainerView.bounds
+      
+      let distance = abs(CGRectGetMinX(self.centerContainerView.frame))
+      let duration: NSTimeInterval = animated ? NSTimeInterval(max(distance / abs(velocity), DrawerMinimumAnimationDuration)) : 0.0
+      
+      let leftDrawerVisible = CGRectGetMinX(self.centerContainerView.frame) > 0
+      let rightDrawerVisible = CGRectGetMinX(self.centerContainerView.frame) < 0
+      
+      var visibleSide: DrawerSide = .None
+      var percentVisible: CGFloat = 0.0
+      
+      if leftDrawerVisible {
+        let visibleDrawerPoint = CGRectGetMinX(self.centerContainerView.frame)
+        percentVisible = max(0.0, visibleDrawerPoint / 250)
+        visibleSide = .Left
+      } else if rightDrawerVisible {
+        let visibleDrawerPoints = CGRectGetWidth(self.centerContainerView.frame) - CGRectGetMaxX(self.centerContainerView.frame)
+        percentVisible = max(0.0, visibleDrawerPoints / 250)
+        visibleSide = .Right
+      }
+      
+      let sideDrawerViewController = self.sideDrawerViewControllerForSide(visibleSide)
+      
+      self.updateDrawerVisualStateForDrawerSide(visibleSide, percentVisible: percentVisible)
+      sideDrawerViewController?.beginAppearanceTransition(false, animated: animated)
+      
+      UIView.animateWithDuration(duration, delay: 0.0, usingSpringWithDamping: self.drawerDampingFactor, initialSpringVelocity: velocity / distance, options: options, animations: { () -> Void in
+        self.setNeedsStatusBarAppearanceUpdate()
+        self.centerContainerView.frame = newFrame
+        self.updateDrawerVisualStateForDrawerSide(visibleSide, percentVisible: 0.0)
+        }, completion: { (finished) -> Void in
+          sideDrawerViewController?.endAppearanceTransition()
+          self.openSide = .None
+          self.resetDrawerVisualStateForDrawerSide(visibleSide)
+          self.animatingDrawer = false
+          completion?(finished)
+      })
     }
   }
   
