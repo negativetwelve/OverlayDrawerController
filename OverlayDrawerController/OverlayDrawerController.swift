@@ -369,15 +369,13 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
       
       if sideDrawerViewController != nil {
         sideDrawerViewController!.beginAppearanceTransition(false, animated: true)
+        self.shadowView.hidden = false
         UIView.animateWithDuration(0.3, delay: 0.0, usingSpringWithDamping: self.drawerDampingFactor, initialSpringVelocity: 0, options: options, animations: { () -> Void in
           self.setNeedsStatusBarAppearanceUpdate()
           
-          self.shadowView.hidden = false
           self.shadowView.backgroundColor = UIColor.blackColor().colorWithAlphaComponent(0.3)
           
-          println(self.childControllerContainerView.frame)
           self.childControllerContainerView.frame = self.evo_visibleDrawerFrame
-          println(self.childControllerContainerView.frame)
           
           }, completion: { (finished) -> Void in
             if drawerSide != self.openSide {
@@ -430,6 +428,7 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
         self.setNeedsStatusBarAppearanceUpdate()
         
         self.childControllerContainerView.frame = self.evo_offscreenLeftDrawerFrame
+        self.shadowView.backgroundColor = UIColor.blackColor().colorWithAlphaComponent(0)
         self.shadowView.hidden = true
         
         }, completion: { (finished) -> Void in
