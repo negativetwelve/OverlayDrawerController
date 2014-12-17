@@ -13,11 +13,6 @@ class LeftViewController: UIViewController {
   override init() {
     super.init()
     title = "LeftViewController"
-    view.backgroundColor = .blueColor()
-    
-    var subview = UIView(frame: CGRect(x: 80, y: 10, width: 100, height: 100))
-    subview.backgroundColor = .orangeColor()
-    self.view.addSubview(subview)
   }
   
   override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
@@ -31,6 +26,8 @@ class LeftViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    self.view.backgroundColor = .whiteColor()
   }
   
   override func didReceiveMemoryWarning() {
