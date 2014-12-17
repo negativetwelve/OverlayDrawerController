@@ -135,6 +135,7 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
   private lazy var shadowView: UIView = {
     let shadowView = UIView(frame: self.view.bounds)
     shadowView.backgroundColor = UIColor.blackColor().colorWithAlphaComponent(0)
+    shadowView.hidden = true
 
     let tapGesture = UITapGestureRecognizer(target: self, action: "tapOnShadow:")
     shadowView.addGestureRecognizer(tapGesture)
