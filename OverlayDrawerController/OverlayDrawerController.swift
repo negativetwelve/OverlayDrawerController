@@ -484,4 +484,11 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
       }
     }
   }
+  
+  public func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {
+    if touch.view.isKindOfClass(UIControl) {
+      return false
+    }
+    return true
+  }
 }
