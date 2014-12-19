@@ -210,14 +210,8 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
 //        viewController!.view.hidden = true
       }
       
-      let gestureRecognizer = UIGestureRecognizer(target: self, action: "drawerViewTapped:")
-      viewController!.view.addGestureRecognizer(gestureRecognizer)
-      
       viewController!.didMoveToParentViewController(self)
-//      viewController!.view.frame = viewController!.evo_offscreenLeftDrawerFrame
-      println(self.childControllerContainerView.frame)
       self.childControllerContainerView.frame = self.evo_offscreenLeftDrawerFrame
-      println(self.childControllerContainerView.frame)
     }
   }
   
@@ -444,12 +438,7 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
   // MARK: - UIActions
   //
   public func tapOnShadow(sender: UITapGestureRecognizer!) {
-    println("tap on shadow")
     closeDrawerAnimated(true, completion: nil)
-  }
-  
-  public func drawerViewTapped(sender: UITapGestureRecognizer!) {
-    println("drawer view tapped")
   }
   
   public func moveDrawer(recognizer: UIPanGestureRecognizer!) {
@@ -484,11 +473,11 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
       }
     }
   }
-  
-  public func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {
-    if touch.view.isKindOfClass(UIControl) {
-      return false
-    }
-    return true
-  }
+//  
+//  public func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {
+//    if touch.view.isKindOfClass(UIControl) {
+//      return false
+//    }
+//    return true
+//  }
 }
