@@ -163,6 +163,7 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
     self.leftDrawerViewController = leftDrawerViewController
     
     let panGesture = UIPanGestureRecognizer(target: self, action: "moveDrawer:")
+    panGesture.delegate = self
     panGesture.maximumNumberOfTouches = 1
     panGesture.minimumNumberOfTouches = 1
     self.view.addGestureRecognizer(panGesture)
@@ -473,11 +474,12 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
       }
     }
   }
-//  
-//  public func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {
-//    if touch.view.isKindOfClass(UIControl) {
-//      return false
-//    }
-//    return true
-//  }
+  
+  public func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {
+    if touch.view.isKindOfClass(UIControl) {
+      return false
+    }
+    return true
+  }
+  
 }
