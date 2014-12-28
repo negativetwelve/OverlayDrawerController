@@ -42,6 +42,16 @@ public extension UIViewController {
   }
 }
 
+public extension UINavigationBar {
+  public override func sizeThatFits(size: CGSize) -> CGSize {
+    if UIApplication.sharedApplication().statusBarHidden {
+      return CGSizeMake(self.frame.size.width, 64)
+    } else {
+      return CGSizeMake(self.frame.size.width, 44)
+    }
+  }
+}
+
 public enum DrawerSide: Int {
   case None
   case Left
@@ -350,7 +360,8 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
   private func openDrawerSide(drawerSide: DrawerSide, animated: Bool, velocity: CGFloat, animationOptions options: UIViewAnimationOptions, completion: ((Bool) -> Void)?) {
     assert({ () -> Bool in
       return drawerSide != .None
-      }(), "drawerSide cannot be .None")
+    }(), "drawerSide cannot be .None")
+    UIApplication.sharedApplication().setStatusBarHidden(true, withAnimation: .None)
     
     if self.animatingDrawer {
       completion?(false)
@@ -395,6 +406,8 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
   }
   
   private func closeDrawerAnimated(animated: Bool, velocity: CGFloat, animationOptions options: UIViewAnimationOptions, completion: ((Bool) -> Void)?) {
+    UIApplication.sharedApplication().setStatusBarHidden(false, withAnimation: .None)
+    
     if self.animatingDrawer {
       completion?(false)
     } else {
@@ -443,6 +456,8 @@ public class OverlayDrawerController: UIViewController, UIGestureRecognizerDeleg
   }
   
   public func moveDrawer(recognizer: UIPanGestureRecognizer!) {
+    UIApplication.sharedApplication().setStatusBarHidden(true, withAnimation: .None)
+
     let translation = recognizer.translationInView(self.view)
     let velocity = recognizer.velocityInView(self.view)
 

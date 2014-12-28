@@ -14,6 +14,7 @@
 		4D3853911A290E5E00490222 /* ExampleOverlayDrawerControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D3853901A290E5E00490222 /* ExampleOverlayDrawerControllerTests.swift */; };
 		4D38539C1A290F4A00490222 /* OverlayDrawerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D38539B1A290F4A00490222 /* OverlayDrawerController.swift */; };
 		4D38539E1A2916FA00490222 /* LeftViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D38539D1A2916FA00490222 /* LeftViewController.swift */; };
+		4D94E1371A50003C00D82F18 /* NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D94E1361A50003C00D82F18 /* NavigationController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,6 +39,7 @@
 		4D3853901A290E5E00490222 /* ExampleOverlayDrawerControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleOverlayDrawerControllerTests.swift; sourceTree = "<group>"; };
 		4D38539B1A290F4A00490222 /* OverlayDrawerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OverlayDrawerController.swift; path = ../OverlayDrawerController/OverlayDrawerController.swift; sourceTree = "<group>"; };
 		4D38539D1A2916FA00490222 /* LeftViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeftViewController.swift; sourceTree = "<group>"; };
+		4D94E1361A50003C00D82F18 /* NavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +83,7 @@
 			isa = PBXGroup;
 			children = (
 				4D38537A1A290E5D00490222 /* AppDelegate.swift */,
+				4D94E1361A50003C00D82F18 /* NavigationController.swift */,
 				4D38537C1A290E5D00490222 /* ViewController.swift */,
 				4D38539D1A2916FA00490222 /* LeftViewController.swift */,
 				4D3853811A290E5D00490222 /* Images.xcassets */,
@@ -224,6 +227,7 @@
 			files = (
 				4D38539C1A290F4A00490222 /* OverlayDrawerController.swift in Sources */,
 				4D38539E1A2916FA00490222 /* LeftViewController.swift in Sources */,
+				4D94E1371A50003C00D82F18 /* NavigationController.swift in Sources */,
 				4D38537D1A290E5D00490222 /* ViewController.swift in Sources */,
 				4D38537B1A290E5D00490222 /* AppDelegate.swift in Sources */,
 			);
@@ -413,6 +417,7 @@
 				4D3853961A290E5E00490222 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4D3853971A290E5E00490222 /* Build configuration list for PBXNativeTarget "ExampleOverlayDrawerControllerTests" */ = {
 			isa = XCConfigurationList;
@@ -421,6 +426,7 @@
 				4D3853991A290E5E00490222 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

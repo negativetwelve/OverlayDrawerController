@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UIToolbarDelegate, UIBarPositioningDelegate {
 
   override init() {
     super.init()
@@ -38,6 +38,10 @@ class ViewController: UIViewController {
   func showNavigationDrawer(sender: UIButton) {
     println("pressed")
     self.evo_drawerController?.toggleDrawerSide(.Left, animated: true, completion: nil)
+  }
+
+  func positionForBar(bar: UIBarPositioning) -> UIBarPosition {
+    return .TopAttached
   }
 
 }

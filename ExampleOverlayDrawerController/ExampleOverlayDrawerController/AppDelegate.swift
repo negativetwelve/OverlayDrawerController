@@ -22,7 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
     
     let centerViewController = ViewController()
-    let centerNavigationController = UINavigationController(rootViewController: centerViewController)
+    let centerNavigationController = NavigationController(rootViewController: centerViewController)
     
     let leftViewController = LeftViewController()
 
@@ -55,7 +55,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   func applicationWillTerminate(application: UIApplication) {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
   }
-
 
 }
 
